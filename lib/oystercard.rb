@@ -3,6 +3,7 @@ class Oystercard
   attr_reader :balance
 
   BALANCE_LIMIT = 90
+  MINIMUM_FARE = 1
 
   def initialize(balance_limit = BALANCE_LIMIT)
     @balance = 0
@@ -20,6 +21,7 @@ class Oystercard
   end
 
   def touch_in
+    fail "Insufficient funds" if @balance < MINIMUM_FARE
     @card_in_use = true
   end
 
