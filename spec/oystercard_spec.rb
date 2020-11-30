@@ -23,4 +23,28 @@ describe Oystercard do
         expect { subject.deduct(20) }.to change { subject.balance }.from(50).to 30
     end
   end
+
+  describe "#journey" do
+    
+    it "touch_in turns in_journey? to true" do
+      expect{ subject.touch_in }.to change { subject.in_journey? }.from(false).to true
+    end
+
+    it "touch_out turns in_journey? to false" do
+      subject.touch_in
+      expect{ subject.touch_out }.to change { subject.in_journey? }.from(true).to false
+    end
+
+    it "should check if the card is in use" do
+      subject.touch_in
+      expect(subject.in_journey?).to eq true
+    end
+
+    it "should check if the card is in use" do
+      subject.touch_in
+      subject.touch_out
+      expect(subject.in_journey?).to eq false
+    end
+
+  end
 end
