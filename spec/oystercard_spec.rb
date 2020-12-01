@@ -17,12 +17,12 @@ describe Oystercard do
     end
   end
   
-  describe '#decuct' do
-    it 'takes 20 of the balance' do
-        subject.top_up(50)
-        expect { subject.deduct(20) }.to change { subject.balance }.from(50).to 30
-    end
-  end
+#  describe '#decuct' do
+#    it 'takes 20 of the balance' do
+#        subject.top_up(50)
+#        expect { subject.deduct(20) }.to change { subject.balance }.from(50).to 30
+#    end
+#  end
 
   describe "#journey" do
     
@@ -52,6 +52,12 @@ describe Oystercard do
 
     it 'does not let you touch_in if balance < £1' do
       expect { subject.touch_in }.to raise_error('Insufficient funds')
+    end
+
+    it 'deducts minimum fare on touch_out' do
+      subject.top_up(10)
+      subject.touch_in
+      expect { subject.touch_out }.to change{subject.balance}.by(-Oystercard::MINIMUM_FARE)
     end
   end
 end
