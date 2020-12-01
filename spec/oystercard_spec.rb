@@ -25,39 +25,44 @@ describe Oystercard do
 #  end
 
   describe "#journey" do
-    
+    let(:entry_station){ double :entry_station }
     it "touch_in turns in_journey? to true" do
       subject.top_up(10)
-      expect{ subject.touch_in }.to change { subject.in_journey? }.from(false).to true
+      expect{ subject.touch_in(entry_station) }.to change { subject.in_journey? }.from(false).to true
     end
 
     it "touch_out turns in_journey? to false" do
       subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(entry_station)
       expect{ subject.touch_out }.to change { subject.in_journey? }.from(true).to false
     end
 
     it "should check if the card is in use" do
       subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(entry_station)
       expect(subject.in_journey?).to eq true
     end
 
     it "should check if the card is in use" do
       subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(entry_station)
       subject.touch_out
       expect(subject.in_journey?).to eq false
     end
 
     it 'does not let you touch_in if balance < £1' do
-      expect { subject.touch_in }.to raise_error('Insufficient funds')
+      expect { subject.touch_in(entry_station) }.to raise_error('Insufficient funds')
     end
 
     it 'deducts minimum fare on touch_out' do
       subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(entry_station)
       expect { subject.touch_out }.to change{subject.balance}.by(-Oystercard::MINIMUM_FARE)
+    end
+    it "records entry station on touch_in" do
+      subject.top_up(10)
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq entry_station
     end
   end
 end
